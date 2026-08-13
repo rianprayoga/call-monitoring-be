@@ -1,0 +1,22 @@
+#logging:
+#  level:
+#    root: debug
+
+spring:
+  application:
+      name: monitoring
+  datasource:
+    url: jdbc:postgresql://localhost:5432/monitoring
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  mvc:
+    log-request-details: true
+
+logging:
+  level:
+    org.springframework.web: DEBUG
