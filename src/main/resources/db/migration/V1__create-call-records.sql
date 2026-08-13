@@ -4,5 +4,5 @@ CREATE TABLE call_sentiments(
     customer_service_name VARCHAR(100) NOT NULL,
     customer_name VARCHAR(100) NOT NULL,
     customer_sentiment NUMERIC(5,2) NOT NULL CHECK (
-        customer_sentiment >= 000.00 AND customer_sentiment < 100.00)
+        customer_sentiment >= 000.00 AND customer_sentiment <= 100.00)
 );
