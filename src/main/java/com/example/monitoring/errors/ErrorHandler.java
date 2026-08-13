@@ -88,5 +88,4 @@ public class ErrorHandler {
                 .body(ErrorResponse.of(SCHEMA_VALIDATION_FAILED, String.join(" ", errorMessages)));
     }
 
-
 }

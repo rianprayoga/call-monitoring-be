@@ -1,9 +1,9 @@
 package com.example.monitoring.domain;
 
+import com.example.monitoring.controller.sentiments.dto.Filter;
 import com.example.monitoring.controller.sentiments.dto.GetSentimentDto;
 import com.example.monitoring.data.entity.CallSentiment;
 import com.example.monitoring.data.repository.CallSentimentRepo;
-import com.example.monitoring.errors.ErrorCode;
 import com.example.monitoring.errors.http.BadRequestException;
 import com.example.monitoring.utilities.PageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +20,15 @@ public class MonitoringService {
     @Autowired
     private CallSentimentRepo callSentimentRepo;
 
-    public PageResponse<GetSentimentDto> getSentiments(String cursor, Integer size){
+    public PageResponse<GetSentimentDto> getSentiments(Filter filter, Integer size){
 
-        if (cursor != null){
+        if (filter.cursor() != null){
             CallSentiment sentiment = callSentimentRepo
-                    .getSentimentBy(UUID.fromString(cursor))
+                    .getSentimentBy(UUID.fromString(filter.cursor()))
                     .orElseThrow(() -> new BadRequestException(INVALID_CURSOR, "Invalid cursor provided."));
 
             List<GetSentimentDto> sentiments =
-                    callSentimentRepo.getSentiments(UUID.fromString(cursor), sentiment.getCallTimestamp(), size).stream()
+                    callSentimentRepo.getSentiments(UUID.fromString(filter.cursor()), sentiment.getCallTimestamp(), size).stream()
                             .map(x -> new GetSentimentDto(
                                     x.getCallId(),
                                     x.getCallTimestamp(),
