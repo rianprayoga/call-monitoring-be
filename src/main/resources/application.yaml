@@ -2,6 +2,11 @@
 #  level:
 #    root: debug
 
+
+
+pagination:
+  defaultSize: 5
+
 spring:
   application:
       name: monitoring
