@@ -3,7 +3,7 @@ prerequisite:
 * java 17
 * maven 3.9.9
 * postgres 14 (username and password: postgres)
-* bruno (to run manual test)
+* bruno (to run manual test, import from .json in folder manual-test)
 
 Get inside main folder then run:
 ```
