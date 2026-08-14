@@ -43,7 +43,14 @@ public class MonitoringService {
     private List<GetSentimentDto> getSentimentDtos(Filter filter, Integer size){
         if (filter.cursor() == null){
             return callSentimentRepo
-                    .getSentiments(filter.query(), size, filter.min(), filter.max(), filter.start(), filter.end())
+                    .getSentiments(
+                            filter.query(),
+                            size,
+                            filter.min(),
+                            filter.max(),
+                            filter.start(),
+                            filter.end(),
+                            filter.period())
                     .stream()
                     .map(x -> new GetSentimentDto(
                             x.getCallId(),
@@ -67,6 +74,7 @@ public class MonitoringService {
                         filter.max(),
                         filter.start(),
                         filter.end(),
+                        filter.period(),
                         size)
                 .stream()
                 .map(x -> new GetSentimentDto(

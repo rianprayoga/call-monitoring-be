@@ -19,10 +19,17 @@ public interface CallSentimentRepo extends JpaRepository<CallSentiment, UUID> {
     """, nativeQuery = true)
     Optional<CallSentiment> getSentimentBy(@Param("id") UUID id);
 
-    @Query(value = """
+    @Query(
+            value =
+                    """
             SELECT *
             FROM call_sentiments
             WHERE
+                (cast(:period as timestamp) is null or
+                    (
+                        call_timestamp <= cast(:period as timestamp)  AND
+                        call_timestamp >= ( cast(:period as timestamp) - INTERVAL '3 months') )
+                    ) AND
                 (cast(:start as timestamp) is null or call_timestamp >= :start) AND
                 (cast(:end as timestamp) is null or call_timestamp <= :end) AND
                 (:min is null or customer_sentiment >= :min) AND
@@ -37,21 +44,24 @@ public interface CallSentimentRepo extends JpaRepository<CallSentiment, UUID> {
                 )
             ORDER BY (call_timestamp, call_id) DESC
             LIMIT :size+1
-            """, nativeQuery = true)
+            """,
+            nativeQuery = true)
     List<CallSentiment> getSentiments(
             @Param("query") String query,
             @Param("size") Integer size,
             @Param("min") Double min,
             @Param("max") Double max,
             @Param("start") OffsetDateTime start,
-            @Param("end") OffsetDateTime end
-            );
+            @Param("end") OffsetDateTime end,
+            @Param("period") OffsetDateTime period);
 
     @Query(value = """
             SELECT *
             FROM call_sentiments
             WHERE
                 (call_timestamp,call_id ) < (:timestamp, :id) AND
+                (cast(:period as timestamp) is null or
+                    (call_timestamp <= cast(:period as timestamp)  AND call_timestamp >= (cast(:period as timestamp) - INTERVAL '3 months'))) AND
                 (cast(:start as timestamp) is null or call_timestamp >= :start) AND
                 (cast(:end as timestamp) is null or call_timestamp <= :end) AND
                 (:min is null or customer_sentiment >= :min) AND
@@ -75,6 +85,7 @@ public interface CallSentimentRepo extends JpaRepository<CallSentiment, UUID> {
             @Param("max") Double max,
             @Param("start") OffsetDateTime start,
             @Param("end") OffsetDateTime end,
+            @Param("period") OffsetDateTime period,
             @Param("size") Integer size);
 
 

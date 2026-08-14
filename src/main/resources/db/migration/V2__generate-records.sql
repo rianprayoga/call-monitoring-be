@@ -7,3 +7,11 @@ SELECT
            'Ethan Jackson', 'Ava White'])[floor(random() * 10 + 1)],
     round((random() * 100)::numeric, 2)
 FROM generate_series(1, 10) AS n;
+
+
+INSERT INTO call_sentiments (call_timestamp, customer_service_name, customer_name, customer_sentiment)
+    values
+    	(now() - interval '3 months', 'Smith', 'Daniel', 20),
+        (now() - interval '3 months', 'Nguyen', 'Smith', 19),
+        (now() - interval '3 months', 'Daren', 'Patel', 78.2),
+        (now() - interval '4 months', 'Daren', 'Patel', 54.2);
