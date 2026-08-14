@@ -13,7 +13,7 @@ public class GetSentimentDto {
             OffsetDateTime callTimestamp,
             String customerServiceName,
             String customerName,
-            String customerSentiment) {
+            Double customerSentiment) {
         this.callId = callId;
         this.callTimestamp = callTimestamp;
         this.customerServiceName = customerServiceName;
@@ -25,5 +25,5 @@ public class GetSentimentDto {
     private OffsetDateTime callTimestamp;
     private String customerServiceName;
     private String customerName;
-    private String customerSentiment;
+    private Double customerSentiment;
 }

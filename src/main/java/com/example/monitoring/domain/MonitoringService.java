@@ -47,14 +47,15 @@ public class MonitoringService {
             return new PageResponse<>(sentiments, false, null);
         }
 
-        List<GetSentimentDto> sentiments = callSentimentRepo.getSentiments(size).stream()
-                .map(x -> new GetSentimentDto(
-                        x.getCallId(),
-                        x.getCallTimestamp(),
-                        x.getCustomerServiceName(),
-                        x.getCustomerName(),
-                        x.getCustomerSentiment()))
-                .toList();
+        List<GetSentimentDto> sentiments =
+                callSentimentRepo.getSentiments(size, filter.min(), filter.max(), filter.start(), filter.end()).stream()
+                        .map(x -> new GetSentimentDto(
+                                x.getCallId(),
+                                x.getCallTimestamp(),
+                                x.getCustomerServiceName(),
+                                x.getCustomerName(),
+                                x.getCustomerSentiment()))
+                        .toList();
 
         if (sentiments.size() > size) {
             return new PageResponse<>(

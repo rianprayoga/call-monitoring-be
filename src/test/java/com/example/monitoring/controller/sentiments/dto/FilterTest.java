@@ -74,4 +74,15 @@ public class FilterTest {
                 .hasMessage("Start and End must be used together.");
 
     }
+
+    @Test
+    public void filter_startMustBeforeEnd() {
+
+        Assertions.assertThatThrownBy(() -> Filter.of(1, 2, "2026-08-15T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", null, "what"))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("Start must before End.");
+
+
+
+    }
 }

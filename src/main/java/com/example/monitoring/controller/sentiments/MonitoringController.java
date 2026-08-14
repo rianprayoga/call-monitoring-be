@@ -4,6 +4,7 @@ import com.example.monitoring.controller.sentiments.dto.Filter;
 import com.example.monitoring.controller.sentiments.dto.GetSentimentDto;
 import com.example.monitoring.domain.MonitoringService;
 import com.example.monitoring.utilities.PageResponse;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -14,9 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Validated
 @RestController
@@ -29,7 +27,7 @@ public class MonitoringController {
     @GetMapping("/sentiments")
     public ResponseEntity<PageResponse<GetSentimentDto>> getSentiments(
             @RequestParam(required = false) @DecimalMin(value = "0.0", message = "Min can't be lower than 0.") Double min,
-            @RequestParam(required = false) @DecimalMin(value = "100.00", message = "Max can't be bigger than 100.00.") Double max,
+            @RequestParam(required = false) @DecimalMax(value = "100.00", message = "Max can't be bigger than 100.00.") Double max,
             @RequestParam(required = false)
                     @Pattern(
                             regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$",

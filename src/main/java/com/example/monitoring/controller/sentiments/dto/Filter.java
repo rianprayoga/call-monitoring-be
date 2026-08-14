@@ -14,7 +14,10 @@ public record Filter(
         String cursor
 ) {
 
-    public static Filter of(double min, double max, String start, String end, String period, String cursor) {
+    public static Filter of(Double min, Double max, String start, String end, String period, String cursor) {
+        if (min != null && max != null && min > max){
+            throw new BadRequestException(ErrorCode.SCHEMA_VALIDATION_FAILED, "Min must be less than max.");
+        }
 
         if (period != null) {
             if ((start != null || end != null))
@@ -25,6 +28,10 @@ public record Filter(
         }
 
         if (start != null && end != null) {
+            OffsetDateTime startTime = OffsetDateTime.parse(start);
+            OffsetDateTime endTime = OffsetDateTime.parse(end);
+            if (startTime.isAfter(endTime))
+                throw new BadRequestException(ErrorCode.SCHEMA_VALIDATION_FAILED, "Start must before End.");
             return new Filter(min, max, OffsetDateTime.parse(start), OffsetDateTime.parse(end), null, cursor);
         }
 
