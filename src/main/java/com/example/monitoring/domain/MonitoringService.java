@@ -17,54 +17,65 @@ import static com.example.monitoring.errors.ErrorCode.INVALID_CURSOR;
 @Service
 public class MonitoringService {
 
+
+    private final CallSentimentRepo callSentimentRepo;
+
     @Autowired
-    private CallSentimentRepo callSentimentRepo;
+    public MonitoringService(CallSentimentRepo callSentimentRepo) {
+        this.callSentimentRepo = callSentimentRepo;
+    }
 
     public PageResponse<GetSentimentDto> getSentiments(Filter filter, Integer size){
 
-        if (filter.cursor() != null){
-            CallSentiment sentiment = callSentimentRepo
-                    .getSentimentBy(UUID.fromString(filter.cursor()))
-                    .orElseThrow(() -> new BadRequestException(INVALID_CURSOR, "Invalid cursor provided."));
 
-            List<GetSentimentDto> sentiments =
-                    callSentimentRepo.getSentiments(UUID.fromString(filter.cursor()), sentiment.getCallTimestamp(), size).stream()
-                            .map(x -> new GetSentimentDto(
-                                    x.getCallId(),
-                                    x.getCallTimestamp(),
-                                    x.getCustomerServiceName(),
-                                    x.getCustomerName(),
-                                    x.getCustomerSentiment()))
-                            .toList();
+        List<GetSentimentDto> sentimentDtos = getSentimentDtos(filter, size);
 
-            if (sentiments.size() > size) {
-                return new PageResponse<>(
-                        sentiments.subList(0, size),
-                        true,
-                        sentiments.get(size - 1).getCallId().toString());
-            }
-
-            return new PageResponse<>(sentiments, false, null);
-        }
-
-        List<GetSentimentDto> sentiments =
-                callSentimentRepo.getSentiments(size, filter.min(), filter.max(), filter.start(), filter.end()).stream()
-                        .map(x -> new GetSentimentDto(
-                                x.getCallId(),
-                                x.getCallTimestamp(),
-                                x.getCustomerServiceName(),
-                                x.getCustomerName(),
-                                x.getCustomerSentiment()))
-                        .toList();
-
-        if (sentiments.size() > size) {
+        if (sentimentDtos.size() > size) {
             return new PageResponse<>(
-                    sentiments.subList(0, size),
+                    sentimentDtos.subList(0, size),
                     true,
-                    sentiments.get(size - 1).getCallId().toString());
+                    sentimentDtos.get(size - 1).getCallId().toString());
         }
 
-        return new PageResponse<>(sentiments, false, null);
+        return new PageResponse<>(sentimentDtos, false, null);
+    }
+
+    private List<GetSentimentDto> getSentimentDtos(Filter filter, Integer size){
+        if (filter.cursor() == null){
+            return callSentimentRepo
+                    .getSentiments(filter.query(), size, filter.min(), filter.max(), filter.start(), filter.end())
+                    .stream()
+                    .map(x -> new GetSentimentDto(
+                            x.getCallId(),
+                            x.getCallTimestamp(),
+                            x.getCustomerServiceName(),
+                            x.getCustomerName(),
+                            x.getCustomerSentiment()))
+                    .toList();
+        }
+
+        CallSentiment sentiment = callSentimentRepo
+                .getSentimentBy(UUID.fromString(filter.cursor()))
+                .orElseThrow(() -> new BadRequestException(INVALID_CURSOR, "Invalid cursor provided."));
+
+        return callSentimentRepo
+                .getSentiments(
+                        UUID.fromString(filter.cursor()),
+                        sentiment.getCallTimestamp(),
+                        filter.query(),
+                        filter.min(),
+                        filter.max(),
+                        filter.start(),
+                        filter.end(),
+                        size)
+                .stream()
+                .map(x -> new GetSentimentDto(
+                        x.getCallId(),
+                        x.getCallTimestamp(),
+                        x.getCustomerServiceName(),
+                        x.getCustomerName(),
+                        x.getCustomerSentiment()))
+                .toList();
     }
 
 }

@@ -21,13 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1")
 public class MonitoringController {
 
+    private final MonitoringService monitoringService;
+
     @Autowired
-    private MonitoringService monitoringService;
+    public MonitoringController(MonitoringService monitoringService) {
+        this.monitoringService = monitoringService;
+    }
 
     @GetMapping("/sentiments")
     public ResponseEntity<PageResponse<GetSentimentDto>> getSentiments(
-            @RequestParam(required = false) @DecimalMin(value = "0.0", message = "Min can't be lower than 0.") Double min,
-            @RequestParam(required = false) @DecimalMax(value = "100.00", message = "Max can't be bigger than 100.00.") Double max,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) @DecimalMin(value = "0.0", message = "Min can't be lower than 0.")
+                    Double min,
+            @RequestParam(required = false) @DecimalMax(value = "100.00", message = "Max can't be bigger than 100.00.")
+                    Double max,
             @RequestParam(required = false)
                     @Pattern(
                             regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$",
@@ -48,8 +55,7 @@ public class MonitoringController {
                     @Min(value = 1, message = "Size can't be less than 0.")
                     Integer size) {
 
-
-        Filter filter = Filter.of(min, max, start, end, period, cursor);
+        Filter filter = Filter.of(query, min, max, start, end, period, cursor);
 
         PageResponse<GetSentimentDto> page = monitoringService.getSentiments(filter, size);
 

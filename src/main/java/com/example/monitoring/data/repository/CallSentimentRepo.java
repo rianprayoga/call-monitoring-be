@@ -26,27 +26,55 @@ public interface CallSentimentRepo extends JpaRepository<CallSentiment, UUID> {
                 (cast(:start as timestamp) is null or call_timestamp >= :start) AND
                 (cast(:end as timestamp) is null or call_timestamp <= :end) AND
                 (:min is null or customer_sentiment >= :min) AND
-                (:max is null or customer_sentiment <= :max)
-            ORDER BY call_timestamp, call_id DESC
+                (:max is null or customer_sentiment <= :max) AND
+                (
+                 :query is null or
+                    cast(call_id as text) ilike %:query% or
+                    cast(call_timestamp as text)  like %:query% or
+                    customer_service_name ilike %:query% or
+                    customer_name ilike %:query% or
+                    cast(customer_sentiment as text) like %:query%
+                )
+            ORDER BY (call_timestamp, call_id) DESC
             LIMIT :size+1
             """, nativeQuery = true)
     List<CallSentiment> getSentiments(
+            @Param("query") String query,
             @Param("size") Integer size,
             @Param("min") Double min,
             @Param("max") Double max,
             @Param("start") OffsetDateTime start,
-            @Param("end") OffsetDateTime end);
+            @Param("end") OffsetDateTime end
+            );
 
     @Query(value = """
             SELECT *
             FROM call_sentiments
-            WHERE (call_timestamp,call_id ) > (:timestamp, :id)
-            ORDER BY call_timestamp, call_id DESC
+            WHERE
+                (call_timestamp,call_id ) < (:timestamp, :id) AND
+                (cast(:start as timestamp) is null or call_timestamp >= :start) AND
+                (cast(:end as timestamp) is null or call_timestamp <= :end) AND
+                (:min is null or customer_sentiment >= :min) AND
+                (:max is null or customer_sentiment <= :max) AND
+                (
+                 :query is null or
+                    cast(call_id as text) ilike %:query% or
+                    cast(call_timestamp as text)  like %:query% or
+                    customer_service_name ilike %:query% or
+                    customer_name ilike %:query% or
+                    cast(customer_sentiment as text) like %:query%
+                )
+            ORDER BY (call_timestamp, call_id) DESC
             LIMIT :size+1
             """, nativeQuery = true)
     List<CallSentiment> getSentiments(
             @Param("id") UUID id,
             @Param("timestamp") OffsetDateTime timestamp,
+            @Param("query") String query,
+            @Param("min") Double min,
+            @Param("max") Double max,
+            @Param("start") OffsetDateTime start,
+            @Param("end") OffsetDateTime end,
             @Param("size") Integer size);
 
 

@@ -9,9 +9,10 @@ import java.time.OffsetDateTime;
 public class FilterTest {
 
     @Test
-    public void filer_createdSuccessfully(){
-        Filter filter = Filter.of(12, 13, null, null, null, "what");
+    public void filer_createdSuccessfully() {
+        Filter filter = Filter.of("    ", 12.0, 13.0, null, null, null, "what");
         Assertions.assertThat(filter)
+                .returns(null, Filter::query)
                 .returns(12.0, Filter::min)
                 .returns(13.0, Filter::max)
                 .returns(null, Filter::start)
@@ -19,7 +20,8 @@ public class FilterTest {
                 .returns(null, Filter::period)
                 .returns("what", Filter::cursor);
 
-        filter = Filter.of(12, 13, "2026-08-13T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", null, "what");
+        filter =
+                Filter.of(null, 12.0, 13.0, "2026-08-13T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", null, "what");
         Assertions.assertThat(filter)
                 .returns(12.0, Filter::min)
                 .returns(13.0, Filter::max)
@@ -28,7 +30,7 @@ public class FilterTest {
                 .returns(null, Filter::period)
                 .returns("what", Filter::cursor);
 
-        filter = Filter.of(12, 13, null, null, "2026-08-13T11:06:50.942923Z", "what");
+        filter = Filter.of(null, 12.0, 13.0, null, null, "2026-08-13T11:06:50.942923Z", "what");
         Assertions.assertThat(filter)
                 .returns(12.0, Filter::min)
                 .returns(13.0, Filter::max)
@@ -42,8 +44,9 @@ public class FilterTest {
     public void filter_periodCantBeUsedWithAnotherTimeFilter() {
 
         Assertions.assertThatThrownBy(() -> Filter.of(
-                        1,
-                        2,
+                        null,
+                        1.0,
+                        2.0,
                         "2026-08-13T11:06:50.942923Z",
                         "2026-08-13T11:06:50.942923Z",
                         "2026-08-13T11:06:50.942923Z",
@@ -51,13 +54,13 @@ public class FilterTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("Period can't be used together with start or end.");
 
-        Assertions.assertThatThrownBy(() ->
-                        Filter.of(1, 2, "2026-08-13T11:06:50.942923Z", null, "2026-08-13T11:06:50.942923Z", "what"))
+        Assertions.assertThatThrownBy(() -> Filter.of(
+                        null, 1.0, 2.0, "2026-08-13T11:06:50.942923Z", null, "2026-08-13T11:06:50.942923Z", "what"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("Period can't be used together with start or end.");
 
         Assertions.assertThatThrownBy(() ->
-                        Filter.of(1, 2, null, "2026-08-13T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", "what"))
+                        Filter.of(null,1.0, 2.0, null, "2026-08-13T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", "what"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("Period can't be used together with start or end.");
     }
@@ -65,24 +68,23 @@ public class FilterTest {
     @Test
     public void filter_startAndEndMustBeTogether() {
 
-        Assertions.assertThatThrownBy(() -> Filter.of(1, 2, "2026-08-13T11:06:50.942923Z", null, null, "what"))
+        Assertions.assertThatThrownBy(
+                        () -> Filter.of(null, 1.0, 2.0, "2026-08-13T11:06:50.942923Z", null, null, "what"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("Start and End must be used together.");
 
-        Assertions.assertThatThrownBy(() -> Filter.of(1, 2, null, "2026-08-13T11:06:50.942923Z", null, "what"))
+        Assertions.assertThatThrownBy(
+                        () -> Filter.of(null, 1.0, 2.0, null, "2026-08-13T11:06:50.942923Z", null, "what"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("Start and End must be used together.");
-
     }
 
     @Test
     public void filter_startMustBeforeEnd() {
 
-        Assertions.assertThatThrownBy(() -> Filter.of(1, 2, "2026-08-15T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", null, "what"))
+        Assertions.assertThatThrownBy(() -> Filter.of(
+                        null, 1.0, 2.0, "2026-08-15T11:06:50.942923Z", "2026-08-13T11:06:50.942923Z", null, "what"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("Start must before End.");
-
-
-
     }
 }
