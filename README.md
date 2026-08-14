@@ -10,8 +10,13 @@ Get inside main folder then run:
 mvn spring-boot:run
 ```
 
+to run unit test
+```
+mvn test
+```
+
 ## Database design
-The ideal should be:
+The ideal database design should be:
 * customers_table
   
     | customer_id | name |
@@ -41,8 +46,7 @@ For simplicity I made it looks like this:
 | ---- |:-----:|:-----:|:-----:|:-----:|
 | 1 |bun|foo|xxx|90|
 
-The script can be seen in
-
+The script can be seen in [here](https://github.com/rianprayoga/call-monitoring-be/tree/main/src/main/resources/db/migration)
 ## The endpoint parameter
 
 the API http://localhost:8080/v1/sentiments
