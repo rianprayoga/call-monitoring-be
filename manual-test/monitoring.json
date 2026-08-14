@@ -1,0 +1,203 @@
+{
+  "info": {
+    "name": "monitoring",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "get sentiments with start and end range",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/v1/sentiments?start=2026-08-13T12:06:50.942923Z&end=2026-08-17T11:06:50.942923Z",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "v1",
+            "sentiments"
+          ],
+          "query": [
+            {
+              "key": "start",
+              "value": "2026-08-13T12:06:50.942923Z"
+            },
+            {
+              "key": "end",
+              "value": "2026-08-17T11:06:50.942923Z"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "get sentiments with cursor",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/v1/sentiments?cursor=8dc3cf1a-0427-419b-82a6-66bcc1b9f314",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "v1",
+            "sentiments"
+          ],
+          "query": [
+            {
+              "key": "cursor",
+              "value": "8dc3cf1a-0427-419b-82a6-66bcc1b9f314"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "get sentiments with min",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/v1/sentiments?min=50",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "v1",
+            "sentiments"
+          ],
+          "query": [
+            {
+              "key": "min",
+              "value": "50"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "get sentiments with max",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/v1/sentiments?max=68",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "v1",
+            "sentiments"
+          ],
+          "query": [
+            {
+              "key": "max",
+              "value": "68"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "get sentiments with min-max range",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/v1/sentiments?max=80&min=40",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "v1",
+            "sentiments"
+          ],
+          "query": [
+            {
+              "key": "max",
+              "value": "80"
+            },
+            {
+              "key": "min",
+              "value": "40"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "get sentiments with query",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/v1/sentiments?query=iel",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "v1",
+            "sentiments"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "iel"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "max",
+              "value": "80"
+            },
+            {
+              "key": "min",
+              "value": "40"
+            }
+          ],
+          "variable": []
+        }
+      }
+    }
+  ],
+  "variable": []
+}
